@@ -27,19 +27,19 @@
       z-index: 0;
     }
 
-    /* ── Fond « Black Hole Sun » — mode test : ?fond=trounoir ──
+    /* ── Fond « Black Hole Sun » — actif PAR DÉFAUT ──
        Le carré fait 142vmax, soit la diagonale de l'écran : il couvre le
        viewport à TOUTE rotation, donc jamais de coin vide. La rotation passe
-       par le compositeur (transform), le CPU ne recalcule rien. */
+       par le compositeur (transform), le CPU ne recalcule rien.
+       `?fond=classique` rétablit l'ancien ciel étoilé seul. */
     #trounoir {
       position: fixed;
       inset: 0;
       z-index: 0;
       overflow: hidden;
       pointer-events: none;
-      display: none;
     }
-    body.fond-trounoir #trounoir { display: block; }
+    body.fond-classique #trounoir { display: none; }
 
     /* Voile de lisibilité. Le centre du trou noir est noir : le texte du hero
        y perd tout son contraste. On assombrit légèrement le centre, les bords
@@ -87,7 +87,7 @@
        on l'assombrit en gardant les côtés intacts, là où est le disque.
        z-index -1 dans .page (qui est un contexte d'empilement) : le rideau passe
        au-dessus du fond et du canvas, mais sous le texte. */
-    body.fond-trounoir .page::before {
+    body:not(.fond-classique) .page::before {
       content: '';
       position: fixed;
       inset: 0;
@@ -821,12 +821,15 @@
     const canvas = document.getElementById('galaxy');
     const ctx = canvas.getContext('2d');
 
-    /* Mode test : ?fond=trounoir affiche le fond Black Hole Sun derrière le
-       canvas. Sans le paramètre, le rendu est strictement inchangé. */
-    const FOND_TROUNOIR =
-      new URLSearchParams(location.search).get('fond') === 'trounoir';
-    if (FOND_TROUNOIR) {
-      document.body.classList.add('fond-trounoir');
+    /* Le fond « Black Hole Sun » est désormais le fond PAR DÉFAUT : il s'affiche
+       sur le site sans aucun paramètre. `?fond=classique` rétablit l'ancien ciel
+       étoilé seul — le canvas reprend alors son aplat opaque et le fond animé est
+       masqué. */
+    const FOND_CLASSIQUE =
+      new URLSearchParams(location.search).get('fond') === 'classique';
+    if (FOND_CLASSIQUE) {
+      document.body.classList.add('fond-classique');
+    } else {
 
       /* Le fond tourne : tout texte finit par passer devant le disque clair.
          On rend donc chaque texte lisible indépendamment de ce qu'il a derrière
@@ -901,9 +904,10 @@
 
     function draw(now) {
       ctx.clearRect(0, 0, W, H);
-      if (!FOND_TROUNOIR) {
-        // Fond opaque par défaut. En mode test, on laisse voir le trou noir
-        // derrière : seules les étoiles et nébuleuses du canvas restent.
+      if (FOND_CLASSIQUE) {
+        // ?fond=classique : l'ancien ciel étoilé seul, aplat opaque du canvas.
+        // Sinon on laisse voir le trou noir derrière : seules les étoiles et
+        // nébuleuses du canvas restent, en surimpression.
         ctx.fillStyle = '#050302';
         ctx.fillRect(0, 0, W, H);
       }
