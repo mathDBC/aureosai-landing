@@ -80,6 +80,32 @@
       }
     }
 
+    /* ── Rideau de lisibilité ──
+       Le fond est fixe et tourne : chaque bloc de texte passe tôt ou tard
+       devant une zone claire du disque, donc assombrir « une zone précise » ne
+       peut pas tenir. En revanche la colonne de contenu, elle, ne bouge pas :
+       on l'assombrit en gardant les côtés intacts, là où est le disque.
+       z-index -1 dans .page (qui est un contexte d'empilement) : le rideau passe
+       au-dessus du fond et du canvas, mais sous le texte. */
+    body.fond-trounoir .page::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      /* Bords laissés INTACTS (jusqu'à 12 % et après 88 %) : c'est là que le
+         disque est le plus lumineux et le plus beau. Seule la colonne de
+         contenu (≈ 20-80 % de la largeur) est assombrie. */
+      background: linear-gradient(90deg,
+        rgba(5, 3, 2, 0)    0%,
+        rgba(5, 3, 2, 0)   12%,
+        rgba(5, 3, 2, .68) 24%,
+        rgba(5, 3, 2, .70) 50%,
+        rgba(5, 3, 2, .68) 76%,
+        rgba(5, 3, 2, 0)   88%,
+        rgba(5, 3, 2, 0)  100%);
+    }
+
     /* Vignette */
     body::after {
       content: '';
@@ -799,7 +825,31 @@
        canvas. Sans le paramètre, le rendu est strictement inchangé. */
     const FOND_TROUNOIR =
       new URLSearchParams(location.search).get('fond') === 'trounoir';
-    if (FOND_TROUNOIR) document.body.classList.add('fond-trounoir');
+    if (FOND_TROUNOIR) {
+      document.body.classList.add('fond-trounoir');
+
+      /* Le fond tourne : tout texte finit par passer devant le disque clair.
+         On rend donc chaque texte lisible indépendamment de ce qu'il a derrière
+         — halo sombre par texte, et éclaircissement des tons intermédiaires
+         (#b3a18d tombe à 1,1:1 sur le disque : illisible par construction).
+         Un élément ayant son propre fond opaque (bouton, pastille) est laissé
+         intact : il n'a pas besoin d'aide. */
+      const TONS_MAT = ['rgb(179, 161, 141)', 'rgb(200, 180, 160)',
+                        'rgb(139, 122, 107)', 'rgb(104, 86, 74)'];
+      const HALO = '0 0 3px rgba(5,3,2,.92), 0 1px 20px rgba(5,3,2,.95)';
+      const renforcerLisibilite = () => {
+        document.querySelectorAll('.page *').forEach(el => {
+          if (el.childElementCount) return;          /* feuilles de texte */
+          if (!(el.textContent || '').trim()) return;
+          const cs = getComputedStyle(el);
+          if (cs.display === 'none' || cs.visibility === 'hidden') return;
+          if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)') return;
+          if (TONS_MAT.includes(cs.color)) el.style.color = '#f4ece1';
+          el.style.textShadow = HALO;
+        });
+      };
+      addEventListener('DOMContentLoaded', renforcerLisibilite);
+    }
     let W, H, stars = [], nebulae = [], shootingStars = [];
 
     function resize() {
