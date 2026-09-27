@@ -27,6 +27,59 @@
       z-index: 0;
     }
 
+    /* ── Fond « Black Hole Sun » — mode test : ?fond=trounoir ──
+       Le carré fait 142vmax, soit la diagonale de l'écran : il couvre le
+       viewport à TOUTE rotation, donc jamais de coin vide. La rotation passe
+       par le compositeur (transform), le CPU ne recalcule rien. */
+    #trounoir {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      display: none;
+    }
+    body.fond-trounoir #trounoir { display: block; }
+
+    /* Voile de lisibilité. Le centre du trou noir est noir : le texte du hero
+       y perd tout son contraste. On assombrit légèrement le centre, les bords
+       (là où est le disque incandescent) restent intacts.
+       Pour l'ajuster : monter les opacités = texte plus lisible, fond plus plat. */
+    #trounoir::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 64% 60% at 50% 52%,
+        rgba(5, 3, 2, .74) 0%,
+        rgba(5, 3, 2, .48) 45%,
+        rgba(5, 3, 2, .14) 72%,
+        rgba(5, 3, 2, 0) 88%);
+    }
+
+    #trounoir img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 142vmax;
+      height: 142vmax;
+      max-width: none;
+      transform-origin: 50% 50%;
+      animation: trounoir-spin 160s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes trounoir-spin {
+      from { transform: translate(-50%, -50%) rotate(0turn) scale(1.03); }
+      to   { transform: translate(-50%, -50%) rotate(1turn) scale(1.03); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #trounoir img {
+        animation: none;
+        transform: translate(-50%, -50%) scale(1.03);
+      }
+    }
+
     /* Vignette */
     body::after {
       content: '';
@@ -512,6 +565,15 @@
 </head>
 <body>
   <script>window.scrollTo(0,0);</script>
+
+  <!-- Fond « Black Hole Sun » — affiché seulement avec ?fond=trounoir -->
+  <div id="trounoir" aria-hidden="true">
+    <picture>
+      <source srcset="blackhole-sun.webp" type="image/webp">
+      <img src="blackhole-sun.jpg" alt="">
+    </picture>
+  </div>
+
   <canvas id="galaxy"></canvas>
 
   <div class="page">
@@ -732,6 +794,12 @@
     /* ── Fond galactique — première version ── */
     const canvas = document.getElementById('galaxy');
     const ctx = canvas.getContext('2d');
+
+    /* Mode test : ?fond=trounoir affiche le fond Black Hole Sun derrière le
+       canvas. Sans le paramètre, le rendu est strictement inchangé. */
+    const FOND_TROUNOIR =
+      new URLSearchParams(location.search).get('fond') === 'trounoir';
+    if (FOND_TROUNOIR) document.body.classList.add('fond-trounoir');
     let W, H, stars = [], nebulae = [], shootingStars = [];
 
     function resize() {
@@ -776,8 +844,12 @@
 
     function draw(now) {
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#050302';
-      ctx.fillRect(0, 0, W, H);
+      if (!FOND_TROUNOIR) {
+        // Fond opaque par défaut. En mode test, on laisse voir le trou noir
+        // derrière : seules les étoiles et nébuleuses du canvas restent.
+        ctx.fillStyle = '#050302';
+        ctx.fillRect(0, 0, W, H);
+      }
 
       /* ── Nébuleuses en rotation lente ── */
       nebulae.forEach(n => {
