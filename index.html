@@ -844,6 +844,13 @@
           const cs = getComputedStyle(el);
           if (cs.display === 'none' || cs.visibility === 'hidden') return;
           if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)') return;
+          /* Texte en dégradé (background-clip: text + remplissage transparent) :
+             un text-shadow se peindrait PAR-DESSUS le dégradé et effacerait la
+             couleur. C'est le cas des initiales dorées du logo — on n'y touche
+             pas, elles ont déjà leur contraste. */
+          if (cs.webkitTextFillColor === 'rgba(0, 0, 0, 0)') return;
+          if (cs.backgroundImage !== 'none') return;
+          if (el.closest('.brand-bar, .logo-mark')) return;
           if (TONS_MAT.includes(cs.color)) el.style.color = '#f4ece1';
           el.style.textShadow = HALO;
         });
