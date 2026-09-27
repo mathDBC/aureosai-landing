@@ -316,7 +316,16 @@
    display: block;
    font-size: 2.2rem;
    font-weight: 900;
-   color: rgba(255, 154, 60, 0.18);
+   /* Or de la marque : exactement le dégradé des deux A du logo.
+      Pour un or uni, remplacer les 4 déclarations par : color: #f7d774;
+      Pour doser, ajuster l'opacité du halo doré ci-dessous. */
+   background-image: linear-gradient(135deg, #f7d774, #e0a93b);
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent;
+   /* drop-shadow et NON text-shadow : sur un texte en dégradé, un text-shadow
+      se peint par-dessus le dégradé et efface la couleur (cf. les initiales). */
+   filter: drop-shadow(0 0 16px rgba(247, 215, 116, 0.30));
    letter-spacing: -0.04em;
    margin-bottom: 0.5rem;
    line-height: 1;
