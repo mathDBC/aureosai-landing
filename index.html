@@ -464,6 +464,82 @@
       display: none;
     }
 
+ /* ── Questionnaire bas de page ── */
+ .diag-strip {
+      text-align: center;
+      padding: 4rem 2rem;
+      border-top: 1px solid rgba(58, 37, 20, 0.4);
+    }
+    .diag-inner { max-width: 520px; margin: 0 auto; }
+    .diag-strip h2 {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 0.8rem;
+    }
+    .diag-strip p {
+      color: #b3a18d;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .diag-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      text-align: left;
+      margin-top: 2rem;
+    }
+    .diag-form select,
+    .diag-form input[type="text"],
+    .diag-form input[type="email"] {
+      width: 100%;
+      background: rgba(40, 25, 14, 0.4);
+      border: 1px solid rgba(58, 37, 20, 0.8);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #f5ece0;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    .diag-form select option { background: #1a0e04; color: #f5ece0; }
+    .diag-form fieldset {
+      border: 1px solid rgba(58, 37, 20, 0.8);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 0;
+    }
+    .diag-form legend {
+      color: #b3a18d;
+      font-size: 0.85rem;
+      padding: 0 6px;
+    }
+    .diag-form fieldset label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f5ece0;
+      font-size: 0.9rem;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+    .diag-form input[type="checkbox"] { accent-color: #ff9a3c; }
+    .diag-form button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a0e04;
+      background: linear-gradient(135deg, #ff9a3c, #f7d774);
+      transition: opacity 0.2s;
+    }
+    .diag-form button:hover { opacity: 0.9; }
+
  /* ── Mentions légales ── */
  .legal {
    padding: 0 2rem;
@@ -750,6 +826,49 @@
       </form>
     </section>
 
+    <!-- ── Questionnaire bas de page ── -->
+    <section class="diag-strip" id="diagnostic">
+      <div class="diag-inner">
+        <h2>Pas sûr de ce qui peut être automatisé&nbsp;?</h2>
+        <p>Laissez-nous comprendre votre activité, on vous propose la bonne surface IA.</p>
+        <button type="button" class="btn-primary" id="diag-toggle">Découvrir votre surface IA adaptée</button>
+        <form class="diag-form" id="diag-form" action="https://formspree.io/f/mzezaynd" method="POST" hidden>
+          <select name="profil" required>
+            <option value="" disabled selected>Vous êtes…</option>
+            <option>Un particulier</option>
+            <option>Un indépendant / chef d'entreprise</option>
+            <option>Une entreprise (équipe)</option>
+          </select>
+          <select name="niveau" required>
+            <option value="" disabled selected>Votre niveau avec l'IA…</option>
+            <option>Je débute</option>
+            <option>J'utilise de temps en temps</option>
+            <option>J'utilise tous les jours</option>
+          </select>
+          <fieldset>
+            <legend>Que voulez-vous faire avec l'IA&nbsp;?</legend>
+            <label><input type="checkbox" name="usages" value="Écrire / rédiger"> Écrire / rédiger</label>
+            <label><input type="checkbox" name="usages" value="Organiser / synthétiser"> Organiser / synthétiser</label>
+            <label><input type="checkbox" name="usages" value="Automatiser des tâches répétitives"> Automatiser des tâches répétitives</label>
+            <label><input type="checkbox" name="usages" value="Créer des images"> Créer des images</label>
+            <label><input type="checkbox" name="usages" value="Comprendre et choisir les bons outils"> Comprendre et choisir les bons outils</label>
+            <label><input type="checkbox" name="usages" value="Former mon équipe"> Former mon équipe</label>
+          </fieldset>
+          <input type="text" name="projet" placeholder="Un projet précis en tête&nbsp;? (facultatif)">
+          <select name="format" required>
+            <option value="" disabled selected>Format préféré…</option>
+            <option>Visio individuel</option>
+            <option>En présentiel</option>
+            <option>À mon rythme (ressources + points réguliers)</option>
+          </select>
+          <input type="email" name="email" placeholder="Votre email" required>
+          <input type="hidden" name="_subject" value="Nouveau questionnaire — Aureos AI">
+          <button type="submit">Envoyer mes réponses</button>
+          <p class="form-status" id="diag-status">✅ Merci&nbsp;! Votre réponse a bien été envoyée.</p>
+        </form>
+      </div>
+    </section>
+
     <!-- ── Mentions légales (pliable) ── -->
     <section class="legal" id="mentions">
       <div class="legal-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
@@ -995,6 +1114,48 @@
         }
         btn.disabled = false;
         btn.textContent = 'Envoyer';
+      });
+    }
+
+    /* ── Questionnaire bas de page (Formspree, AJAX) ── */
+    const diagToggle = document.getElementById('diag-toggle');
+    const diagForm = document.getElementById('diag-form');
+    if (diagToggle && diagForm) {
+      diagToggle.addEventListener('click', () => {
+        diagForm.hidden = !diagForm.hidden;
+        if (!diagForm.hidden) diagToggle.style.display = 'none';
+      });
+      diagForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const status = document.getElementById('diag-status');
+        const btn = diagForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Envoi…';
+        try {
+          const res = await fetch(diagForm.action, {
+            method: 'POST',
+            body: new FormData(diagForm),
+            headers: { 'Accept': 'application/json' }
+          });
+          if (res.ok) {
+            diagForm.reset();
+            diagForm.hidden = true;
+            diagToggle.style.display = '';
+            status.textContent = '✅ Merci ! Votre réponse a bien été envoyée.';
+            status.style.color = '#f7d774';
+            status.style.display = 'block';
+          } else {
+            status.textContent = '⚠️ Une erreur est survenue, réessayez.';
+            status.style.color = '#f87171';
+            status.style.display = 'block';
+          }
+        } catch (err) {
+          status.textContent = '⚠️ Impossible d\'envoyer pour le moment.';
+          status.style.color = '#f87171';
+          status.style.display = 'block';
+        }
+        btn.disabled = false;
+        btn.textContent = 'Envoyer mes réponses';
       });
     }
   </script>
