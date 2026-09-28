@@ -826,46 +826,12 @@
       </form>
     </section>
 
-    <!-- ── Questionnaire bas de page ── -->
+    <!-- ── Diagnostic : lien vers la page dédiée ── -->
     <section class="diag-strip" id="diagnostic">
       <div class="diag-inner">
         <h2>Pas sûr de ce qui peut être automatisé&nbsp;?</h2>
         <p>Laissez-nous comprendre votre activité, on vous propose la bonne surface IA.</p>
-        <button type="button" class="btn-primary" id="diag-toggle">Découvrir votre surface IA adaptée</button>
-        <form class="diag-form" id="diag-form" action="https://formspree.io/f/mzezaynd" method="POST" hidden>
-          <select name="profil" required>
-            <option value="" disabled selected>Vous êtes…</option>
-            <option>Un particulier</option>
-            <option>Un indépendant / chef d'entreprise</option>
-            <option>Une entreprise (équipe)</option>
-          </select>
-          <select name="niveau" required>
-            <option value="" disabled selected>Votre niveau avec l'IA…</option>
-            <option>Je débute</option>
-            <option>J'utilise de temps en temps</option>
-            <option>J'utilise tous les jours</option>
-          </select>
-          <fieldset>
-            <legend>Que voulez-vous faire avec l'IA&nbsp;?</legend>
-            <label><input type="checkbox" name="usages" value="Écrire / rédiger"> Écrire / rédiger</label>
-            <label><input type="checkbox" name="usages" value="Organiser / synthétiser"> Organiser / synthétiser</label>
-            <label><input type="checkbox" name="usages" value="Automatiser des tâches répétitives"> Automatiser des tâches répétitives</label>
-            <label><input type="checkbox" name="usages" value="Créer des images"> Créer des images</label>
-            <label><input type="checkbox" name="usages" value="Comprendre et choisir les bons outils"> Comprendre et choisir les bons outils</label>
-            <label><input type="checkbox" name="usages" value="Former mon équipe"> Former mon équipe</label>
-          </fieldset>
-          <input type="text" name="projet" placeholder="Un projet précis en tête&nbsp;? (facultatif)">
-          <select name="format" required>
-            <option value="" disabled selected>Format préféré…</option>
-            <option>Visio individuel</option>
-            <option>En présentiel</option>
-            <option>À mon rythme (ressources + points réguliers)</option>
-          </select>
-          <input type="email" name="email" placeholder="Votre email" required>
-          <input type="hidden" name="_subject" value="Nouveau questionnaire — Aurus AI">
-          <button type="submit">Envoyer mes réponses</button>
-          <p class="form-status" id="diag-status">✅ Merci&nbsp;! Votre réponse a bien été envoyée.</p>
-        </form>
+        <a href="diagnostic.html" class="btn-primary">Découvrir votre surface IA adaptée</a>
       </div>
     </section>
 
@@ -1114,48 +1080,6 @@
         }
         btn.disabled = false;
         btn.textContent = 'Envoyer';
-      });
-    }
-
-    /* ── Questionnaire bas de page (Formspree, AJAX) ── */
-    const diagToggle = document.getElementById('diag-toggle');
-    const diagForm = document.getElementById('diag-form');
-    if (diagToggle && diagForm) {
-      diagToggle.addEventListener('click', () => {
-        diagForm.hidden = !diagForm.hidden;
-        if (!diagForm.hidden) diagToggle.style.display = 'none';
-      });
-      diagForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const status = document.getElementById('diag-status');
-        const btn = diagForm.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = 'Envoi…';
-        try {
-          const res = await fetch(diagForm.action, {
-            method: 'POST',
-            body: new FormData(diagForm),
-            headers: { 'Accept': 'application/json' }
-          });
-          if (res.ok) {
-            diagForm.reset();
-            diagForm.hidden = true;
-            diagToggle.style.display = '';
-            status.textContent = '✅ Merci ! Votre réponse a bien été envoyée.';
-            status.style.color = '#f7d774';
-            status.style.display = 'block';
-          } else {
-            status.textContent = '⚠️ Une erreur est survenue, réessayez.';
-            status.style.color = '#f87171';
-            status.style.display = 'block';
-          }
-        } catch (err) {
-          status.textContent = '⚠️ Impossible d\'envoyer pour le moment.';
-          status.style.color = '#f87171';
-          status.style.display = 'block';
-        }
-        btn.disabled = false;
-        btn.textContent = 'Envoyer mes réponses';
       });
     }
   </script>
