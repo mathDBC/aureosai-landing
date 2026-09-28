@@ -59,6 +59,33 @@
         rgba(5, 3, 2, 0) 88%);
     }
 
+    /* ── Rideau de lisibilité ── (colonne de contenu assombrie, bords intacts) */
+    .page::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(90deg,
+        rgba(5, 3, 2, 0)    0%,
+        rgba(5, 3, 2, 0)   12%,
+        rgba(5, 3, 2, .68) 24%,
+        rgba(5, 3, 2, .70) 50%,
+        rgba(5, 3, 2, .68) 76%,
+        rgba(5, 3, 2, 0)   88%,
+        rgba(5, 3, 2, 0)  100%);
+    }
+
+    /* ── Vignette ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 85% 75% at 50% 50%, transparent 25%, #050302 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
     /* ── Layout ── */
     .page {
       position: relative;
