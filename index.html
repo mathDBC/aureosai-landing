@@ -380,16 +380,6 @@
       border-top: 1px solid rgba(58, 37, 20, 0.4);
       border-bottom: 1px solid rgba(58, 37, 20, 0.4);
     }
-    .story-strip blockquote {
-      max-width: 680px;
-      margin: 0 auto;
-      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-      font-style: italic;
-      color: #c8b4a0;
-      line-height: 1.7;
-    }
-    .story-strip blockquote p::before { content: '\201C'; }
-    .story-strip blockquote p::after  { content: '\201D'; }
 
     /* ── CTA ── */
     .cta-strip {
@@ -749,12 +739,8 @@
       </div>
     </section>
 
-    <!-- ── Story / Citation ── -->
-    <section class="story-strip">
-      <blockquote>
-        <p>"J'ai passé des années sur la route et dans les transports. Je sais ce que c'est que de perdre 3 heures sur un formulaire qui aurait dû prendre 10 minutes. C'est pour ça que je fais de l'automatisation&nbsp;: pour rendre ce temps aux gens qui travaillent vraiment."</p>
-      </blockquote>
-    </section>
+    <!-- ── Aération (citation retirée à la demande) ── -->
+    <section class="story-strip" aria-hidden="true"></section>
 
     <!-- ── CTA ── -->
     <section class="cta-strip" id="contact">
