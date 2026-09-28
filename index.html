@@ -272,30 +272,9 @@
    margin: 0 auto;
  }
  .benefits-header {
-   text-align: center;
+   /* Passage « Bénéfices » retiré à la demande : on conserve l'espace vertical (aération). */
+   min-height: 8rem;
    margin-bottom: 3.5rem;
- }
- .benefits-header h2 {
-   font-size: clamp(1.8rem, 4vw, 2.8rem);
-   font-weight: 800;
-   color: #ffffff;
-   letter-spacing: -0.03em;
-   margin-bottom: 0.5rem;
- }
- .benefits-sub {
-   font-size: 0.8rem;
-   font-weight: 600;
-   letter-spacing: 0.15em;
-   text-transform: uppercase;
-   color: #ff9a3c;
-   margin-bottom: 0.75rem;
- }
- .benefits-tagline {
-   font-size: 1rem;
-   color: #b3a18d;
-   max-width: 480px;
-   margin: 0 auto;
-   line-height: 1.6;
  }
  .benefits-grid {
    display: grid;
@@ -642,11 +621,7 @@
     <!-- ── Bénéfices ── -->
     <section class="benefits" id="benefices">
       <div class="benefits-inner">
-        <div class="benefits-header">
-          <h2>Bénéfices</h2>
-          <p class="benefits-sub">Ce que vous gagnez concrètement</p>
-          <p class="benefits-tagline">Pas de promesses abstraites : des résultats mesurables sur votre quotidien opérationnel.</p>
-        </div>
+        <div class="benefits-header" aria-hidden="true"></div>
         <div class="benefits-grid">
           <div class="benefit-card">
             <span class="benefit-num">01</span>
