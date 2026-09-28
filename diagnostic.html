@@ -52,12 +52,11 @@
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 70% 62% at 50% 50%,
-          rgba(5, 3, 2, .72) 0%,
-          rgba(5, 3, 2, .52) 55%,
-          rgba(5, 3, 2, .22) 85%,
-          rgba(5, 3, 2, 0) 100%);
+      background: radial-gradient(ellipse 64% 60% at 50% 52%,
+        rgba(5, 3, 2, .74) 0%,
+        rgba(5, 3, 2, .48) 45%,
+        rgba(5, 3, 2, .14) 72%,
+        rgba(5, 3, 2, 0) 88%);
     }
 
     /* ── Layout ── */
@@ -76,6 +75,12 @@
       align-items: center;
       padding: 2.5rem 2rem 0.5rem;
     }
+    .logo-mark {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
     .logo-main {
       display: flex;
       align-items: center;
@@ -93,14 +98,11 @@
     }
     .logo-ai { color: #ffffff; }
     .logo-sub {
-      display: block;
-      text-align: center;
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: #b3a18d;
-      margin-top: 6px;
     }
 
     /* ── Contenu ── */
@@ -282,7 +284,7 @@
 
   <div class="page">
     <header class="brand-bar">
-      <div>
+      <div class="logo-mark">
         <div class="logo-main">
           <span class="logo-a">A</span><span class="logo-ne">urus</span>&nbsp;<span class="logo-a">A</span><span class="logo-ai">I</span>
         </div>
